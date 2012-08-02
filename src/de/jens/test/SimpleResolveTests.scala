@@ -14,7 +14,7 @@ class SimpleResolveTests extends Specification{
       val solver = new Solver()
       def ex = solver.createPredicate("ex")
       "No Binding for concrete Predicate" in {
-        solver.resolve(Predicate("ex", 1, 1)).isEmpty isTrue
+        solver.resolve(Predicate("ex", 1, 1)).isEmpty
       }
       
     }

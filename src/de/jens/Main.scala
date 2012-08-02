@@ -22,7 +22,7 @@ object Main extends Application {
     isAge("Jens", x)
   }
   
-  print(solver.resolve(Predicate("isAge", "Jens", x)))
+  print( solver.resolve(isAge(x, 27)) )
   
   
 }
