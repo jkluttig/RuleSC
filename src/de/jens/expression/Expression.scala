@@ -1,6 +1,6 @@
 package de.jens.expression
 
-trait Expression {
+abstract class Expression {
 
 }
 

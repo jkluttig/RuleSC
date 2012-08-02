@@ -1,13 +1,28 @@
 package de.jens
 import de.jens.expression.Var
+import de.jens.expression.Predicate
 
-class Main {
-
-  def isAge = Rule.createPredicate("isAge")
-  val x = new Var("x")
+object Main extends Application {
   
-  Rule.define(x) {
+  val solver = new Solver()
+
+  def isAge = solver.createPredicate("isAge")
+  def alterIst = solver.createPredicate("alterIst")
+  
+  solver.defineFacts {
+    isAge("Jens", 27)
+    isAge("Sven", 27)
+  }
+  
+  val x = solver.createVariable("x")
+  
+  solver.define(x) {
+    alterIst("Jens", x)
+  } <= {
     isAge("Jens", x)
   }
+  
+  print(solver.resolve(Predicate("isAge", "Jens", x)))
+  
   
 }
