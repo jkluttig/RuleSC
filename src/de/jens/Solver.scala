@@ -39,6 +39,7 @@ class Solver {
 
   def resolve(pred: Predicate) : Iterator[Binding] = {
     require(pred != null)
+    require(!(pred.subj.isInstanceOf[Var] && pred.obj.isInstanceOf[Var] && pred.obj == pred.subj))
     index.resolve(pred)
   }
 
