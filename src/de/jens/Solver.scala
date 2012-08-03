@@ -1,14 +1,12 @@
 package de.jens
-import de.jens.expression.Expression
-import de.jens.expression.Var
-import de.jens.expression.Value
-import de.jens.expression.Predicate
+import de.jens.expression._
 import de.jens.index._
+import de.jens.rule._
 
 class Solver {
   var collectFacts = false
   val index = new SimpleIndex()
-  val rules = Map[String, Rule]()
+  var rules = Map[String, Rule]()
 
   private def predicate(name: String)(subject: Expression, obj: Expression): Predicate = {
     if (collectFacts) {
@@ -33,8 +31,9 @@ class Solver {
   }
 
   def define(vars: Var*)(head: => Predicate): Rule = {
-    head
-    new Rule
+    var headPredicate = head
+    rules += headPredicate.name -> new Rule(head)
+    rules(headPredicate.name)
   }
 
   def resolve(pred: Predicate) : Iterator[Binding] = {
