@@ -19,7 +19,7 @@ object Main extends Application {
   solver.define(x) {
     alterIst("Jens", x)
   } <= {
-    isAge("Jens", x)
+    isAge("Jens", x) && isAge("Sven", x)
   }
   
   for( elem <- solver.resolve(isAge(x, 27))) print(elem)
