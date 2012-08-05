@@ -4,5 +4,5 @@ case class Predicate(name : String, subj : Expression, obj : Expression) extends
   require(name != null && !name.isEmpty())
   require(subj != null && obj != null)
   
-  lazy val vars = for(i <- List(subj, obj) if i.isInstanceOf[Var]) yield i
+  lazy val vars = for(i <- List(subj, obj) if i.isInstanceOf[Var]) yield i.asInstanceOf[Var]
 }

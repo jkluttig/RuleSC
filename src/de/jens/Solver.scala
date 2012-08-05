@@ -42,23 +42,22 @@ class Solver {
     if(!rules.contains(pred.name))
     	index.resolve(pred)
     else
-      evaluate(rules.get(pred.name).get) map { (x) => 
-      val filtered = x.value filter { (y) =>
-        pred.vars.contains(y._1)
-      }
-      Binding(filtered)
-    }
+      evaluate(rules.get(pred.name).get, pred) map project(pred.vars)
   }
   
-  def evaluate(rule: Rule) : Iterator[Binding] = {
-    val body = evaluate(rule.body)
-    body map { (x) =>
-      val filtered = x.value filter { (y) =>
-        println(rule.head.vars, y._1)
-        rule.head.vars.contains(y._1)
+  def project(vars: Seq[Var])(bind: Binding) : Binding = {
+    val filtered = bind.value filter { (y) =>
+        vars.contains(y._1)
       }
-      Binding(filtered)
-    }
+    Binding(filtered)
+  }
+  
+  def evaluate(rule: Rule, goal: Predicate) : Iterator[Binding] = {
+    val head = rule.head
+    evaluate(rule.body) filter { (x) =>
+      //TODO Filtern
+      true
+    } map project(rule.head.vars)
   }
   
   def evaluate(expr: Expression) : Iterator[Binding] = {
