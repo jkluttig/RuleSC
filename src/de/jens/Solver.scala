@@ -1,17 +1,16 @@
 package de.jens
-import de.jens.expression.Expression
-import de.jens.expression.Var
-import de.jens.expression.Value
-import de.jens.expression.Predicate
+import de.jens.expression._
+import de.jens.index._
+import de.jens.rule._
 
 class Solver {
   var collectFacts = false
-  val factModel = scala.collection.mutable.Set[Tuple3[String, Expression, Expression]]()
-  val rules = Map[String, Rule]()
+  val index = new SimpleIndex()
+  var rules = Map[String, Rule]()
 
   private def predicate(name: String)(subject: Expression, obj: Expression): Predicate = {
     if (collectFacts) {
-      factModel add Tuple3(name, subject, obj)
+      index.store(subject.asInstanceOf[Value[_]], name, obj.asInstanceOf[Value[_]])
     }
     Predicate(name, subject, obj)
   }
@@ -32,30 +31,43 @@ class Solver {
   }
 
   def define(vars: Var*)(head: => Predicate): Rule = {
-    head
-    new Rule
+    var headPredicate = head
+    rules += headPredicate.name -> new Rule(head)
+    rules(headPredicate.name)
   }
 
-  def resolve(pred: Predicate) : scala.collection.mutable.Set[Map[Var, Value[_]]] = {
+  def resolve(pred: Predicate) : Iterator[Binding] = {
     require(pred != null)
-    factModel filter { (it) =>
-      var ok = it._1 == pred.name
-      pred.subj match {
-        case x : Var => 
-        case _ => ok &= it._2 == pred.subj
+    require(!(pred.subj.isInstanceOf[Var] && pred.obj.isInstanceOf[Var] && pred.obj == pred.subj))
+    if(!rules.contains(pred.name))
+    	index.resolve(pred)
+    else
+      evaluate(rules.get(pred.name).get, pred) map project(pred.vars)
+  }
+  
+  def project(vars: Seq[Var])(bind: Binding) : Binding = {
+    val filtered = bind.value filter { (y) =>
+        vars.contains(y._1)
       }
-      pred.obj match {
-        case x : Var =>
-        case _ => ok &= it._3 == pred.obj
-      }
-      ok
-    } map { (a) =>
-      pred.subj match {
-        case x : Var => 
-        case _ => ok &= it._2 == pred.subj
-      }
-      Map((Var("x"), Value(1)))
+    Binding(filtered)
+  }
+  
+  def evaluate(rule: Rule, goal: Predicate) : Iterator[Binding] = {
+    val head = rule.head
+    evaluate(rule.body) filter { (x) =>
+      //TODO Filtern
+      true
+    } map project(rule.head.vars)
+  }
+  
+  def evaluate(expr: Expression) : Iterator[Binding] = {
+    expr match {
+      case x: Predicate => evaluate(x)
     }
+  }
+  
+  def evaluate(pred: Predicate) : Iterator[Binding] = {
+    index.resolve(pred)
   }
 
 }

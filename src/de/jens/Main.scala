@@ -10,7 +10,7 @@ object Main extends Application {
   def alterIst = solver.createPredicate("alterIst")
   
   solver.defineFacts {
-    isAge("Jens", 27)
+    isAge("Jens", 28)
     isAge("Sven", 27)
   }
   
@@ -19,10 +19,10 @@ object Main extends Application {
   solver.define(x) {
     alterIst("Jens", x)
   } <= {
-    isAge("Jens", x)
+    isAge("Jens", x) && isAge("Sven", x)
   }
   
-  print( solver.resolve(isAge(x, 27)) )
+  for( elem <- solver.resolve(isAge(x, 27))) print(elem)
   
   
 }
