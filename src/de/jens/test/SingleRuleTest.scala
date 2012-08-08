@@ -24,10 +24,10 @@ class SingleRuleTest extends Specification {
 	    ex(x, y)
 	  }
 	  "Rule Result is Same as Ground Result" in {
-		solver.resolve(ex(x, y)) mustEqual solver.resolve(result(x, y))  
+	    solver.resolve(ex(x, y)).toList mustEqual solver.resolve(result(x, y)).toList  
 	  }
 	  "Rule Result is Same as Ground Result Second" in {
-		solver.resolve(ex("Jens", 27)) mustEqual solver.resolve(result("Jens", 28))  
+	    solver.resolve(ex("Jens", 27)).toList mustEqual solver.resolve(result("Jens", 28)).toList  
 	  }
   }
   "With One Rule And Conjunction" should {
@@ -46,9 +46,12 @@ class SingleRuleTest extends Specification {
 	  } <= {
 	    ex(x, y) && ex(x, 28)
 	  }
-	  val resOne = solver.resolve(ex(x, y))
 	  "Rule Result is Same as Ground Result" in {
-		(solver.resolve(result(x, y)).size mustEqual 1) and  (resOne.contains(Binding(Map(x -> Value("Jens"), y -> Value(27)))) mustEqual true)  
+	    solver.resolve(result(x, y)).toList mustEqual solver.resolve(ex(x, y)).toList
 	  }
+	  "Rule Result is Same as Ground Result with Constant" in {
+      solver.resolve(result(x, 27)).toList mustEqual solver.resolve(ex(x, 27)).toList
+    }
+	  //TODO: Tests mit Variablen umbinden, Variablen neudefinieren usw.
   }
 }
