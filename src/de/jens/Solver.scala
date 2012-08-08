@@ -46,6 +46,10 @@ class Solver {
       evaluate(rules.get(pred.name).get, pred)
   }
   
+  def validate() {
+    
+  }
+  
   def project(vars: Seq[Var])(bind: Binding) : Binding = {
     val filtered = bind.value filter { (y) =>
         vars.contains(y._1)
@@ -105,7 +109,7 @@ class Solver {
   }
   
   def evaluate(or: Or) : Iterator[Binding] = {
-    (evaluate(or.first) ++ evaluate(or.second)) withFilter distinct
+    (evaluate(or.first) ++ evaluate(or.second)) map project(or.vars) withFilter distinct
   }
   
   def isJoin(first: Binding, second: Binding, vars: Seq[Var]) : Boolean = {
@@ -125,4 +129,8 @@ class Solver {
     index.resolve(pred)
   }
 
+  def clearRules() {
+    rules = Map[String, Rule]()
+  }
+  
 }
