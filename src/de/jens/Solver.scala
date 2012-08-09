@@ -3,10 +3,11 @@ import de.jens.expression._
 import de.jens.index._
 import de.jens.rule._
 import java.util.HashSet
+import de.jens.Engine
 
-class Solver {
+abstract class Solver[TIndex <: Index](implicit m: scala.reflect.Manifest[TIndex]) extends Engine {
   var collectFacts = false
-  val index = new SimpleIndex()
+  val index = m.erasure.newInstance.asInstanceOf[TIndex]
   var rules = Map[String, Rule]()
 
   private def predicate(name: String)(subject: Expression, obj: Expression): Predicate = {

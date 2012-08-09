@@ -3,12 +3,14 @@ import org.specs2.mutable.Specification
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import de.jens.Solver
+import de.jens.ForwardEngine
+import de.jens.index._
 
 @RunWith(classOf[JUnitRunner])
 class InvalidRulesTest extends Specification {
   
   "Rule with Ivalid Vars" should {
-    val solver = new Solver()
+    val solver = new Solver[SimpleIndex]() with ForwardEngine
     val x = solver.createVariable("x")
     val y = solver.createVariable("y")
     def ex = solver.createPredicate("ex")

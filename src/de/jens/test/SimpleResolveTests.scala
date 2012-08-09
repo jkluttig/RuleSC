@@ -6,13 +6,15 @@ import org.specs2.runner.JUnitRunner
 import de.jens.Solver
 import de.jens.expression._
 import de.jens.Binding
+import de.jens.ForwardEngine
+import de.jens.index.SimpleIndex
 
 
 @RunWith(classOf[JUnitRunner])
 class SimpleResolveTests extends Specification{
   
   "With no Facts defined" should {
-      val solver = new Solver()
+      val solver = new Solver[SimpleIndex]() with ForwardEngine
       val x = solver.createVariable("x")
       def ex = solver.createPredicate("ex")
       "No Binding for concrete Predicate" in {
@@ -24,7 +26,7 @@ class SimpleResolveTests extends Specification{
     }
   
   "With Only Facts defined" should {
-      val solver = new Solver()
+      val solver = new Solver[SimpleIndex]() with ForwardEngine
       val x = solver.createVariable("x")
       def ex = solver.createPredicate("ex")
       def sample = solver.createPredicate("sample")

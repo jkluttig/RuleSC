@@ -1,10 +1,17 @@
 package de.jens
 import de.jens.expression.Var
 import de.jens.expression.Predicate
+import de.jens.index._
 
 object Main extends Application {
   
-  val solver = new Solver()
+  class A[B <: Index](implicit m: scala.reflect.Manifest[B]) {
+    var b : B = m.erasure.newInstance.asInstanceOf[B]
+  }
+  
+  var solver = new Solver() with ForwardEngine
+  
+  solver.hello()
 
   def isAge = solver.createPredicate("isAge")
   def alterIst = solver.createPredicate("alterIst")
@@ -22,7 +29,7 @@ object Main extends Application {
     isAge("Jens", x) && isAge("Sven", x)
   }
   
-  for( elem <- solver.resolve(isAge(x, 27))) print(elem)
+  //for( elem <- solver.resolve(isAge(x, 27))) print(elem)
   
   
 }
