@@ -3,7 +3,6 @@ package de.jens.test
 import org.specs2.mutable.Specification
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
-import de.jens.Solver
 import de.jens.expression._
 import de.jens.Binding
 import de.jens.ForwardEngine
@@ -14,8 +13,8 @@ import de.jens.index.SimpleIndex
 class SimpleResolveTests extends Specification{
   
   "With no Facts defined" should {
-      val solver = new Solver[SimpleIndex]() with ForwardEngine
-      val x = solver.createVariable("x")
+      val solver = new ForwardEngine[SimpleIndex]()
+      val x = Var("x")
       def ex = solver.createPredicate("ex")
       "No Binding for concrete Predicate" in {
         solver.resolve(ex(1, 1)).isEmpty
@@ -26,8 +25,8 @@ class SimpleResolveTests extends Specification{
     }
   
   "With Only Facts defined" should {
-      val solver = new Solver[SimpleIndex]() with ForwardEngine
-      val x = solver.createVariable("x")
+      val solver = new ForwardEngine[SimpleIndex]()
+      val x = Var("x")
       def ex = solver.createPredicate("ex")
       def sample = solver.createPredicate("sample")
       solver.defineFacts {

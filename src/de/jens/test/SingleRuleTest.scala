@@ -1,19 +1,19 @@
 package de.jens.test
 import org.specs2.mutable.Specification
 import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
-import de.jens.Solver
 import de.jens.Binding
 import de.jens.expression.Value
 import de.jens.ForwardEngine
 import de.jens.index.SimpleIndex
+import de.jens.expression.Var
+import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class SingleRuleTest extends Specification {
   "With One Rule And one Predicate" should {
-	  val solver = new Solver[SimpleIndex]() with ForwardEngine
-	  val x = solver.createVariable("x")
-	  val y = solver.createVariable("y")
+	  val solver = new ForwardEngine[SimpleIndex]()
+	  val x = Var("x")
+	  val y = Var("y")
 	  def ex = solver.createPredicate("ex")
 	  def result = solver.createPredicate("result")
 	  solver.defineFacts {
@@ -33,10 +33,10 @@ class SingleRuleTest extends Specification {
 	  }
   }
   "With One Rule And Conjunction" should {
-	  val solver = new Solver[SimpleIndex]() with ForwardEngine
-	  val x = solver.createVariable("x")
-	  val y = solver.createVariable("y")
-	  val z = solver.createVariable("z")
+	  val solver = new ForwardEngine[SimpleIndex]()
+	  val x = Var("x")
+	  val y = Var("y")
+	  val z = Var("z")
 	  def ex = solver.createPredicate("ex")
 	  def result = solver.createPredicate("result")
 	  solver.defineFacts {
@@ -57,9 +57,9 @@ class SingleRuleTest extends Specification {
 	  //TODO: Tests mit Variablen umbinden, Variablen neudefinieren usw.
   }
   "With One Rule and Disjunction" should {
-    val solver = new Solver[SimpleIndex]() with ForwardEngine
-    val x = solver.createVariable("x")
-    val y = solver.createVariable("y")
+    val solver = new ForwardEngine[SimpleIndex]()
+    val x = Var("x")
+    val y = Var("y")
     def ex = solver.createPredicate("ex")
     def result = solver.createPredicate("result")
     def result2 = solver.createPredicate("result2")

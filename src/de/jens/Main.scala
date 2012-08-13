@@ -2,6 +2,7 @@ package de.jens
 import de.jens.expression.Var
 import de.jens.expression.Predicate
 import de.jens.index._
+import de.jens.expression.Var
 
 object Main extends Application {
   
@@ -9,9 +10,7 @@ object Main extends Application {
     var b : B = m.erasure.newInstance.asInstanceOf[B]
   }
   
-  var solver = new Solver() with ForwardEngine
-  
-  solver.hello()
+  var solver = new ForwardEngine[SimpleIndex]()
 
   def isAge = solver.createPredicate("isAge")
   def alterIst = solver.createPredicate("alterIst")
@@ -21,7 +20,7 @@ object Main extends Application {
     isAge("Sven", 27)
   }
   
-  val x = solver.createVariable("x")
+  val x = Var("x")
   
   solver.define(x) {
     alterIst("Jens", x)
